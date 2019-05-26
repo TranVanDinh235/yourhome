@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="white">#FFFFFF</color>
+    <color name="colordefault">#FAFAFA</color>
+    <color name="red">#F44336</color>
+    <color name="blue">#03A9F4</color>
+    <color name="replyblue1">#344955</color>
+    <color name="replyblue2">#232F34</color>
+    <color name="replyblue3">#4A6572</color>
+    <color name="replyorange">#F9AA33</color>
+    <color name="backgroundedittext">#E2E2E2</color>
+    <color name="bottomsheettext">#B9B8B8</color>
+
+</resources>

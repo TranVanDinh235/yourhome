@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="24dp"
+    android:paddingTop="56dp"
+    android:paddingRight="24dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="130dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/logo" />
+
+    <!-- Email Label -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColorHint="@color/white">
+
+        <EditText
+            android:id="@+id/input_email"
+            style="@style/headline6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress" />
+    </android.support.design.widget.TextInputLayout>
+
+    <!-- Password Label -->
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColorHint="@color/white">
+
+        <EditText
+            android:id="@+id/input_password"
+            style="@style/headline6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_login"
+        style="@style/headline5"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_signin"
+        android:text="Login" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_signin_gg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_signin_google"
+            android:padding="10dp"
+            android:src="@drawable/ic_google_plus" />
+
+        <ImageButton
+            android:id="@+id/btn_signin_fb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_signin_google"
+            android:padding="10dp"
+            android:src="@drawable/ic_facebook_login" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/link_signup"
+        style="@style/headline6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="No account yet? Create one"
+        android:textSize="16dip" />
+</LinearLayout>
+

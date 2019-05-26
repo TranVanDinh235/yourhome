@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="4dp">
+    <android.support.design.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/txt_home_person"
+                android:layout_width="match_parent"
+                style="@style/caption"
+                android:text="Tran Van Dinh - 25 phut truoc"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txt_home_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/button"
+                android:textColor="@color/replyblue2"
+                android:text="AAAAAAAAAAAAAAAAAAAAAAA" />
+            <TextView
+                android:id="@+id/txt_home_des"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/caption"
+                android:transitionName="title"
+                android:text="Them mot chut mo ta ve phong tro..."/>
+            <LinearLayout
+                android:id="@+id/linearlayout"
+                android:layout_width="600dp"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+            </LinearLayout>
+            <TextView
+                android:id="@+id/txt_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/body2"
+                android:text="20m2 - 2.5trieu/thang"/>
+            <TextView
+                android:id="@+id/txt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/caption"
+                android:drawableLeft="@drawable/ic_place_black_24dp"
+                android:text="Mai Dich, Cau Giay, Ha Noi"/>
+        </LinearLayout>
+    </android.support.design.card.MaterialCardView>
+</FrameLayout>

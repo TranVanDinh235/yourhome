@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/content_coordinator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:showIn="@layout/activity_main">
+        <!--<FrameLayout-->
+            <!--android:id="@+id/frame_layout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
+        <!--</FrameLayout>-->
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/frame_layout">
+
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.bottomappbar.BottomAppBar
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/replyblue2"
+        android:paddingTop="8dp"
+        app:fabAlignmentMode="center"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="10dp"
+        app:fabCradleVerticalOffset="5dp"
+        android:transitionName="navigationbar"
+        app:navigationIcon="@drawable/ic_menu_black_24dp"
+        app:hideOnScroll="true"
+        app:layout_scrollFlags="scroll|enterAlways">
+    </android.support.design.bottomappbar.BottomAppBar>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/replyorange"
+        app:fabSize="normal"
+        app:borderWidth="0dp"
+        android:transitionName="floatactionbutton"
+        android:src="@drawable/ic_search_black_24dp"
+        app:layout_anchor="@id/navigation"/>
+</android.support.design.widget.CoordinatorLayout>

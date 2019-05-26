@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style="@style/AppTheme"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".NewPost.NewPostActivity"
+    tools:showIn="@layout/activity_new_post"
+    android:layout_margin="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="60dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loại tin:"/>
+    <RadioGroup
+        android:id="@+id/radioGroup_newpost_type"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/radioButton_newpost_forRent"
+            android:text="Cho thuê"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/radioButton_newpost_oGhep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ở ghép"/>
+    </RadioGroup>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tiêu đề"/>
+    <EditText
+        android:id="@+id/edt_newpost_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kiểu phòng"/>
+    <Button
+        android:id="@+id/btn_newpost_typeRoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Giá phòng"/>
+    <EditText
+        android:id="@+id/edt_newpost_rent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Diện tích"/>
+    <EditText
+        android:id="@+id/edt_newpost_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Địa chỉ"/>
+        <fragment
+            android:id="@+id/place_autocomplete_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thêm số điện thoại "/>
+    <EditText
+        android:id="@+id/edt_newpost_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="phone"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thêm mô tả"/>
+    <EditText
+        android:id="@+id/edt_newpost_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="4"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Đăng ảnh phòng" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_newpost_addImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:background="@drawable/btn_search_background"
+                android:layout_marginLeft="150dp"
+                android:layout_marginRight="8dp"
+                android:text="Thêm ảnh"/>
+            <Button
+                android:id="@+id/btn_newpost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:background="@drawable/btn_search_background"
+                android:text="New post"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

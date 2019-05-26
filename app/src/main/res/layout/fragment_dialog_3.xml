@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Button
+        android:id="@+id/btn_dialog_phongtro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Phòng trọ"
+        android:textAllCaps="false"/>
+    <Button
+        android:id="@+id/btn_dialog_canho"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Căn hộ"
+        android:textAllCaps="false"/>
+    <Button
+        android:id="@+id/btn_dialog_canhomini"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Căn hộ mini"
+        android:textAllCaps="false"/>
+    <Button
+        android:id="@+id/btn_dialog_nhanguyencan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nhà nguyên căn"
+        android:textAllCaps="false"/>
+    <Button
+        android:id="@+id/btn_dialog_bietthu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Biệt thự"
+        android:textAllCaps="false"/>
+    <Button
+        android:id="@+id/btn_dialog_kitucxa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kí túc xá"
+        android:textAllCaps="false"/>
+</LinearLayout>

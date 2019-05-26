@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    android:id="@+id/fragment_menu_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="330dp"
+    android:orientation="vertical"
+    android:background="@drawable/bts_background"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="24dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <TextView
+            android:layout_width="40dp"
+            android:drawableLeft="@drawable/ic_edit_black_24dp"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/fragment_bottom_sheet_edit_account"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            style="@style/headline6"
+            android:textColor="@color/bottomsheettext"
+            android:layout_marginLeft="8dp"
+            android:text="Chỉnh sửa"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <TextView
+            android:layout_width="40dp"
+            android:drawableLeft="@drawable/ic_profile_24dp"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/fragment_bottom_sheet_changepass"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            style="@style/headline6"
+            android:textColor="@color/bottomsheettext"
+            android:layout_marginLeft="8dp"
+            android:text="Đổi mật khẩu"/>
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="8dp"
+        android:id="@+id/fragment_bs_account_sign_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/headline6"
+        android:textColor="@color/bottomsheettext"
+        android:layout_marginLeft="8dp"
+        android:text="Đăng xuất"
+        android:layout_marginBottom="150dp"/>
+</LinearLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/windowinfo_background"
+    android:padding="8dp">
+    <TextView
+        android:id="@+id/window_info_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/button"
+        android:textColor="@color/replyorange"
+        android:text="Cho thue nha tro"/>
+    <TextView
+        android:id="@+id/window_snippet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/caption"
+        android:text="0382211"
+        />
+</LinearLayout>
