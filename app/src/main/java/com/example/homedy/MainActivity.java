@@ -1,39 +1,41 @@
 package com.example.homedy;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.bottomappbar.BottomAppBar;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Explode;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Toast;
 
-import com.example.homedy.Account.AccountFragment;
+import com.example.homedy.Account.AccountActivity;
 import com.example.homedy.Account.LoginActivity;
-import com.example.homedy.Account.LoginFragment;
 import com.example.homedy.Home.HomeFragment;
 import com.example.homedy.NewPost.NewPostActivity;
-import com.example.homedy.Post.PostFragment;
+import com.example.homedy.Posts.PostFragment;
 import com.example.homedy.Search.SearchActivity;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentListener, LoginFragment.OnLoginFragmentListener, AccountFragment.OnAccountFragmentListener, PostFragment.OnPostFragmentListener,
-        BottomSheetMain.Listenner, BottomSheetAccount.Listener {
+public class MainActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentListener, PostFragment.OnPostFragmentListener,
+        BottomSheetMain.Listenner {
     private static final int REQUEST_NEW_POST = 40;
     private static final int REQUEST_LOGIN = 47;
-    private AccountFragment accountFragment = AccountFragment.newInstance(null, null);
-    private HomeFragment homeFragment = HomeFragment.newInstance(1);
-    private LoginFragment loginFragment = LoginFragment.newInstance(false);
-    private PostFragment postFragment = PostFragment.newInstance(3);
+    private static final int REQUEST_ACCOUNT = 48;
+    private static final String TAG = "main";
+    private HomeFragment homeFragment;
+    private PostFragment postFragment;
     BottomSheetMain bottomSheetMain;
 
 
@@ -42,13 +44,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        homeFragment = HomeFragment.newInstance(1);
         floatingActionButton = findViewById(R.id.fab_navigation);
-        bottomAppBar = findViewById(R.id.navigation);
+        bottomAppBar = (BottomAppBar) findViewById(R.id.navigation);
 
         setSupportActionBar(bottomAppBar);
 
@@ -57,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
             @Override
             public void onClick(View v) {
                 navigationSearch();
-                floatingActionButton.hide();
             }
         });
 
@@ -77,9 +80,19 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
 
     private void navigationSearch() {
         Intent intent = new Intent(this, SearchActivity.class);
-        Pair<View, String> p1 = Pair.create((View)bottomAppBar, "navigationbar");
-        Pair<View, String> p2 = Pair.create((View)floatingActionButton, "floatactionbutton");
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1, p2);
+        Transition transition = new Explode();
+        getWindow().setSharedElementEnterTransition(transition);
+        getWindow().setSharedElementExitTransition(transition);
+        ActivityOptions options;
+
+        android.util.Pair<View, String> p2 = android.util.Pair.create((View)bottomAppBar, "navigation_transition");
+        android.util.Pair<View, String> p1 = android.util.Pair.create((View)floatingActionButton, "fab_transition");
+        View navBar = this.findViewById(android.R.id.navigationBarBackground);
+        if (navBar != null) {
+            android.util.Pair<View, String> p3 = android.util.Pair.create(navBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
+            options = ActivityOptions.makeSceneTransitionAnimation(this, p1, p2, p3);
+        }
+        else options = ActivityOptions.makeSceneTransitionAnimation(this, p1, p2 );
         startActivity(intent, options.toBundle());
     }
 
@@ -107,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
                     Intent intent = new Intent(this, NewPostActivity.class);
                     startActivityForResult(intent, REQUEST_NEW_POST);
                 }
+                else Toast.makeText(this,"Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -123,20 +137,12 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
     }
 
     @Override
-    public void onLoginFragmentListenre(Uri uri) {
-    }
-
-    @Override
-    public void onAccountFragmentListener(Uri uri) {
-
-    }
-
-    @Override
     public void Profile() {
         SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
         String check = sharedPreferences.getString("email", "des");
         if (!check.equals("des")) {
-            loadFragment(accountFragment);
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivityForResult(intent, REQUEST_ACCOUNT);
         } else {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, REQUEST_LOGIN);
@@ -146,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
 
     @Override
     public void Post() {
-        Log.d("tag", "Post: ");
+        postFragment = PostFragment.newInstance(3);
         loadFragment(postFragment);
         bottomSheetMain.dismiss();
     }
@@ -156,23 +162,32 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
         SharedPreferences sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
-        editor.commit();
-
-    }
-
-
-    @Override
-    public void edit() {
+        editor.apply();
         bottomSheetMain.dismiss();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     @Override
-    public void changepass() {
-        bottomSheetMain.dismiss();
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
-    public void signout() {
-        bottomSheetMain.dismiss();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_NEW_POST:
+                    finish();
+                    startActivity(getIntent());
+                    Log.d(TAG, "onActivityResult: ");
+                    break;
+                case REQUEST_LOGIN:
+                    finish();
+                    startActivity(getIntent());
+                    break;
+            }
+        }
     }
 }

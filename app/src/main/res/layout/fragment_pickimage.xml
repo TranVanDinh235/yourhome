@@ -5,12 +5,18 @@
     <Button
         android:id="@+id/btn_dialog_camera"
         android:layout_width="match_parent"
-        android:textAllCaps="false"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/replyblue1"
+        style="@style/subtitle1"
+        android:background="@color/colordefault"
+        android:textAllCaps="false"/>
     <Button
         android:id="@+id/btn_dialog_fileimage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/replyblue1"
+        style="@style/subtitle1"
+        android:background="@color/colordefault"
         android:textAllCaps="false"
         />
 </LinearLayout>

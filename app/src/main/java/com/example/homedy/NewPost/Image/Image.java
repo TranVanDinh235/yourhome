@@ -11,7 +11,6 @@ public class Image {
     public static ArrayList<Bitmap> getBitmaps() {
         return bitmaps;
     }
-
     public static ArrayList<String> getPaths() {
         return paths;
     }

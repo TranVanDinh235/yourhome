@@ -13,5 +13,5 @@
     <color name="replyorange">#F9AA33</color>
     <color name="backgroundedittext">#E2E2E2</color>
     <color name="bottomsheettext">#B9B8B8</color>
-
+    <color name="backgroundColor">#EBEDF2</color>
 </resources>

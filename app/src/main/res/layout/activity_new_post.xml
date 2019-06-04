@@ -4,19 +4,160 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".NewPost.NewPostActivity">
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-    </android.support.design.widget.AppBarLayout>
-
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include layout="@layout/content_new_post" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="@style/AppTheme.NoActionBar"
+        android:layout_margin="5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="60dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/headline6"
+                android:text="Loại tin:"/>
+            <RadioGroup
+                android:id="@+id/radioGroup_newpost_type"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RadioButton
+                    android:id="@+id/radioButton_newpost_forRent"
+                    android:text="Cho thuê"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/subtitle1"
+                    android:layout_marginRight="8dp"/>
+                <RadioButton
+                    android:id="@+id/radioButton_newpost_oGhep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/subtitle1"
+                    android:text="Ở ghép"/>
+            </RadioGroup>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+                <EditText
+                    android:id="@+id/edt_newpost_title"
+                    style="@style/subtitle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Tiêu đề"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+                <EditText
+                    android:id="@+id/edt_newpost_typeRoom"
+                    style="@style/subtitle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Kiểu phòng"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp">
+                    <EditText
+                        android:id="@+id/edt_newpost_rent"
+                        style="@style/subtitle1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Giá"
+                        android:inputType="number" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp">
+                    <EditText
+                        android:id="@+id/edt_newpost_area"
+                        style="@style/subtitle1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Diện tích"
+                        android:inputType="number" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+            <fragment
+                android:id="@+id/place_autocomplete_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                />
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp">
+                <EditText
+                    android:id="@+id/edt_newpost_phone"
+                    style="@style/subtitle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Số điện thoại"
+                    android:inputType="phone" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp">
+                <EditText
+                    android:id="@+id/edt_newpost_description"
+                    style="@style/subtitle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mô tả"
+                    android:inputType="textMultiLine" />
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
     </ScrollView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/replyorange"
+        app:fabSize="normal"
+        app:borderWidth="0dp"
+        android:transitionName="@string/fab_transition"
+        android:src="@drawable/ic_send_black_24dp"
+        app:layout_anchor="@id/navigation"/>
+    <android.support.design.bottomappbar.BottomAppBar
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/replyblue2"
+        android:paddingTop="8dp"
+        app:fabAlignmentMode="center"
+        app:fabCradleMargin="8dp"
+        app:fabCradleRoundedCornerRadius="0dp"
+        app:fabCradleVerticalOffset="5dp"
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        android:transitionName="@string/navigation_transition"
+        app:hideOnScroll="true"
+        app:layout_scrollFlags="scroll|enterAlways">
+    </android.support.design.bottomappbar.BottomAppBar>
 </android.support.design.widget.CoordinatorLayout>

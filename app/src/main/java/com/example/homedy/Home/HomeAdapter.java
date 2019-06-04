@@ -13,17 +13,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.homedy.APost.APostActivity;
+import com.example.homedy.Post;
 import com.example.homedy.R;
 
 import java.util.ArrayList;
 
-public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerViewHomeAdapter.ViewHolder> {
+public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     private final String POSITION = "key_position";
-    ArrayList<HomeItem> homeItems = HomeItem.getHomeItems();
+    ArrayList<Post> posts = Post.getPosts();
     private Context context;
     @NonNull
     @Override
-    public RecyclerViewHomeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public HomeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         this.context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.home_item, viewGroup, false);
@@ -33,8 +34,8 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHomeAdapter.ViewHolder viewHolder, int i) {
-        HomeItem homeItem = homeItems.get(i);
+    public void onBindViewHolder(@NonNull HomeAdapter.ViewHolder viewHolder, int i) {
+        Post post = posts.get(i);
         TextView textViewName = viewHolder._namePerson;
         TextView textViewDes = viewHolder._description;
         TextView textViewGia = viewHolder._gia;
@@ -42,39 +43,39 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerViewHo
         TextView textViewTitle = viewHolder._title;
         LinearLayout linearLayout = viewHolder.linearLayout;
 
-//        if(homeItem.url_image.equals("default")){
+//        if(post.url_image.equals("default")){
 //            imageView.setImageResource(R.drawable.image1);
 //        }
-        for(int index = 0; index < homeItem.url_image.size(); index ++){
+        for(int index = 0; index < post.getUrl_image().size(); index ++){
             ImageView imageView = new ImageView(context);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
             imageView.setPadding(0, 0, 8,0);
-            Glide.with(viewHolder.itemView).load(homeItem.url_image.get(index)).into(imageView);
+            Glide.with(viewHolder.itemView).load(post.getUrl_image().get(index)).into(imageView);
             linearLayout.addView(imageView);
         }
 
 
 
-        String name = homeItem.name + " - " + homeItem.time;
+        String name = post.getName() + " - " + post.getTime();
         textViewName.setText(name);
 
-        String gia = homeItem.area + " m2 - " + homeItem.gia + " đ/tháng";
+        String gia = post.getArea() + " m2 - " + post.getRent() + " đ/tháng";
         textViewGia.setText(gia);
 
-        String title = homeItem.title;
+        String title = post.getTitle();
         if(title.length() > 30) title = title.substring(0 , 27) + "...";
         textViewTitle.setText(title);
 
-        String description = homeItem.description;
+        String description = post.getDescription();
         if(description.length() > 32) description = description.substring(0,30) + "...";
         textViewDes.setText(description);
 
-        textViewAddress.setText(homeItem.address);
+        textViewAddress.setText(post.getAddress());
     }
 
     @Override
     public int getItemCount() {
-        return homeItems.size();
+        return posts.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

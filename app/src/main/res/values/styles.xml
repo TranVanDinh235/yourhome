@@ -10,32 +10,31 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
-    <style name="AppBottomSheetDialogTheme"
-        parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="AppModalStyle"
-        parent="Widget.Design.BottomSheet.Modal">
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bts_background</item>
     </style>
-
-
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowContentTransitions">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
-        <item name="android:windowContentTransitions">true</item>
-
+    <!-- Base Theme for transparent window -->
+    <style name="AppTheme.Transparent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
-        <item name="android:windowContentTransitions">true</item>
-    </style>
+    <!-- Base Theme for ActivityDetail -->
+    <style name="AppTheme.Transparent.ActivityDetail"/>
+
+    <!-- Base Theme for ActivityMain -->
+    <style name="AppTheme.ActivityMain"/>
+
 
     <style name="AudioFileInfoOverlayText">
         <item name="android:paddingLeft">4px</item>
@@ -47,54 +46,67 @@
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1</item>
     </style>
+
     <style name="headline1" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans_light</item>
         <item name="android:textSize">96dip</item>
     </style>
+
     <style name="headline2" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans_semibold</item>
         <item name="android:textSize">60dip</item>
     </style>
+
     <style name="headline3" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans</item>
         <item name="android:textSize">48dip</item>
     </style>
+
     <style name="headline4" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans_semibold</item>
         <item name="android:textSize">34dip</item>
     </style>
+
     <style name="headline5" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans_bold</item>
         <item name="android:textSize">24dip</item>
     </style>
+
     <style name="headline6" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans_medium</item>
         <item name="android:textSize">20dip</item>
     </style>
+
     <style name="subtitle1" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans</item>
         <item name="android:textSize">16dip</item>
     </style>
+
     <style name="subtitle2" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans_medium</item>
         <item name="android:textSize">14dip</item>
     </style>
+
     <style name="body1" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans</item>
         <item name="android:textSize">18dip</item>
     </style>
+
     <style name="body2" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans</item>
         <item name="android:textSize">14dip</item>
     </style>
+
     <style name="button" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans_bold</item>
         <item name="android:textSize">14dip</item>
     </style>
+
     <style name="caption" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans</item>
         <item name="android:textSize">12dip</item>
     </style>
+
     <style name="overline" parent="@android:style/TextAppearance.Small">
         <item name="android:fontFamily">@font/work_sans</item>
         <item name="android:textSize">12dip</item>

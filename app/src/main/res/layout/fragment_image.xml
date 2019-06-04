@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="8dp">
+
     <ImageView
         android:id="@+id/imv_frg_image"
         android:layout_width="match_parent"
@@ -14,5 +16,7 @@
         android:layout_gravity="top|end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:background="@drawable/ic_delete_24dp"/>
+
 </FrameLayout>

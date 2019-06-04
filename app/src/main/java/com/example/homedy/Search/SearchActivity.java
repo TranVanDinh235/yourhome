@@ -9,7 +9,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.bottomappbar.BottomAppBar;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -29,10 +29,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.homedy.Home.HomeItem;
+import com.example.homedy.Post;
 import com.example.homedy.IPaddress;
 import com.example.homedy.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -54,15 +53,15 @@ import java.util.Map;
 
 import static com.android.volley.VolleyLog.TAG;
 
-public class SearchActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
+public class SearchActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     public static final String EXTRA_CONTACT = "EXTRA_CONTACT";
     private String ip = IPaddress.getIp();
     private String url = ip + "post/search";
     private GoogleMap mMap;
     private Marker marker;
-    private ArrayList<HomeItem> homeItemsSearch = HomeItem.getHomeItemsSearch();
-    private ArrayList<HomeItem> homeItemsMap = HomeItem.getHomeItems();
+    private ArrayList<Post> homeItemsSearches = Post.getHomeItemsSearches();
+    private ArrayList<Post> homeItemsMap = Post.getPosts();
     EditText _minRent;
     EditText _maxRent;
     EditText _minArea;
@@ -84,7 +83,6 @@ public class SearchActivity extends AppCompatActivity implements OnMapReadyCallb
             Places.initialize(getApplicationContext(), "AIzaSyA2d8RYsPfPLKspnYnQciZDFBJGbFyNDUc");
         }
 
-
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frg_map2);
         supportMapFragment.getMapAsync(this);
 
@@ -98,7 +96,7 @@ public class SearchActivity extends AppCompatActivity implements OnMapReadyCallb
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //search();
+                search();
             }
         });
         _minRent.setText("1000000");
@@ -106,8 +104,24 @@ public class SearchActivity extends AppCompatActivity implements OnMapReadyCallb
         _minArea.setText("10");
         _maxArea.setText("100");
 
-        floatingActionButton = findViewById(R.id.fab_navigation_search);
-        bottomAppBar = findViewById(R.id.navigation_search);
+        floatingActionButton = findViewById(R.id.fab_navigation);
+        bottomAppBar = findViewById(R.id.navigation);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        postponeEnterTransition();
+
+        final View decor = getWindow().getDecorView();
+        decor.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                decor.getViewTreeObserver().removeOnPreDrawListener(this);
+                startPostponedEnterTransition();
+                return true;
+            }
+        });
     }
 
     public void checkPermission(){
@@ -148,38 +162,38 @@ public class SearchActivity extends AppCompatActivity implements OnMapReadyCallb
                 @Override
                 public void onResponse(JSONArray response) {
                     if(response != null) {
-                        if(homeItemsSearch.size() != 0) homeItemsSearch.clear();
-                        if(homeItemsSearch.size() == 0) {
+                        if(homeItemsSearches.size() != 0) homeItemsSearches.clear();
+                        if(homeItemsSearches.size() == 0) {
                             for (int i = 0; i < response.length(); i++) {
-                                HomeItem homeItem = new HomeItem();
+                                Post post = new Post();
                                 try {
                                     JSONObject jsonObject = response.getJSONObject(response.length() - 1 - i);
-                                    homeItem.setId(jsonObject.getString("_id"));
-                                    homeItem.setTitle(jsonObject.getString("title"));
-                                    homeItem.setDescription(jsonObject.getString("description"));
-                                    homeItem.setName(jsonObject.getString("provider"));
+                                    post.setId(jsonObject.getString("_id"));
+                                    post.setTitle(jsonObject.getString("title"));
+                                    post.setDescription(jsonObject.getString("description"));
+                                    post.setName(jsonObject.getString("provider"));
                                     int gia = jsonObject.getInt("gia");
                                     int dientich = jsonObject.getInt("dientich");
-                                    homeItem.setGia(gia);
-                                    homeItem.setArea(dientich);
+                                    post.setRent(gia);
+                                    post.setArea(dientich);
                                     JSONArray jsonArray = jsonObject.getJSONArray("images");
                                     if (jsonArray.length() != 0)
                                         for(int j = 0; j < jsonArray.length(); j ++){
-                                            homeItem.getUrl_image().add(ip + jsonArray.getString(j));
+                                            post.getUrl_image().add(ip + jsonArray.getString(j));
                                         }
-                                    else homeItem.getUrl_image().add("default");
-                                    homeItem.setTime(jsonObject.getString("time"));
-                                    homeItem.setAddress(jsonObject.getString("address"));
-                                    homeItem.setPosttype(jsonObject.getString("posttype"));
-                                    homeItem.setPhone(jsonObject.getString("phonepost"));
-                                    homeItem.setTyperoom(jsonObject.getString("typeroom"));
-                                    homeItem.setLat(jsonObject.getDouble("lat"));
-                                    homeItem.setLng(jsonObject.getDouble("lng"));
+                                    else post.getUrl_image().add("default");
+                                    post.setTime(jsonObject.getString("time"));
+                                    post.setAddress(jsonObject.getString("address"));
+                                    post.setPosttype(jsonObject.getString("posttype"));
+                                    post.setPhone(jsonObject.getString("phonepost"));
+                                    post.setTyperoom(jsonObject.getString("typeroom"));
+                                    post.setLat(jsonObject.getDouble("lat"));
+                                    post.setLng(jsonObject.getDouble("lng"));
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                homeItemsSearch.add(homeItem);
+                                homeItemsSearches.add(post);
                             }
                         }
                         progressDialog1.dismiss();
@@ -208,11 +222,11 @@ public class SearchActivity extends AppCompatActivity implements OnMapReadyCallb
 
     public void result(){
         Log.d(TAG, "result: ");
-        for(int i = 0; i < homeItemsSearch.size(); i ++){
-            int gia = homeItemsSearch.get(i).getGia();
-            int dientich = homeItemsSearch.get(i).getArea();
+        for(int i = 0; i < homeItemsSearches.size(); i ++){
+            int gia = homeItemsSearches.get(i).getRent();
+            int dientich = homeItemsSearches.get(i).getArea();
             if(gia < minRent && gia > maxRent && dientich < minArea && dientich > maxArea){
-                homeItemsSearch.remove(i);
+                homeItemsSearches.remove(i);
                 i--;
             }
 
@@ -247,26 +261,24 @@ public class SearchActivity extends AppCompatActivity implements OnMapReadyCallb
         });
         mMap.setInfoWindowAdapter(new CustomWindowInfoAdapter(this));
         for(int i = 0; i < homeItemsMap.size(); i ++) {
-            Log.d(TAG, homeItemsMap.get(i).getAddress());
             if(homeItemsMap.get(i).getLng() != null)
                 createMarker(homeItemsMap.get(i));
         }
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fixedLocation, 15));
         checkPermission();
         mMap.setMyLocationEnabled(true);
-
     }
 
-    private Marker createMarker (HomeItem homeItem){
+    private Marker createMarker (Post post){
         if (mMap == null) {
             return null;
         }
         //if(marker != null) marker.remove();
-        LatLng latLng = new LatLng(homeItem.getLat(), homeItem.getLng());
-        String title = homeItem.getTitle();
-        String snippet ="Phone Number :" + homeItem.getPhone() + "\n" + "Rent: "
-                + homeItem.getGia() + "đ - " + "Area: " + homeItem.getArea() + " m2\n" + "Address: " +
-                homeItem.getAddress();
+        LatLng latLng = new LatLng(post.getLat(), post.getLng());
+        String title = post.getTitle();
+        String snippet ="Phone Number :" + post.getPhone() + "\n" + "Rent: "
+                + post.getRent() + "đ - " + "Area: " + post.getArea() + " m2\n" + "Address: " +
+                post.getAddress();
 
         MarkerOptions mOptions = new MarkerOptions().position(latLng)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
@@ -295,5 +307,10 @@ public class SearchActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 }

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.example.homedy.Home.HomeItem;
+import com.example.homedy.Post;
 import com.example.homedy.IPaddress;
 import com.example.homedy.R;
 
@@ -20,7 +20,7 @@ public class PlaceHolderFragment extends Fragment {
     private String ip = IPaddress.getIp();
     private static int numImage;
     private static int pos;
-    ArrayList<HomeItem> homeItems = HomeItem.getHomeItems();
+    ArrayList<Post> posts = Post.getPosts();
     private static final String KEY_IMAGE = "key_image";
 
     public PlaceHolderFragment(){}
@@ -61,10 +61,10 @@ public class PlaceHolderFragment extends Fragment {
 //                    imageView.setImageResource(R.drawable.image1);
 //                    break;
 //        }
-        HomeItem homeItem = homeItems.get(pos);
+        Post post = posts.get(pos);
         for(int i = 0; i < numImage; i ++){
             if(getArguments().getInt(KEY_IMAGE) == i){
-                Glide.with(this).load(homeItem.getUrl_image().get(i)).into(imageView);
+                Glide.with(this).load(post.getUrl_image().get(i)).into(imageView);
             }
         }
         return rootView;

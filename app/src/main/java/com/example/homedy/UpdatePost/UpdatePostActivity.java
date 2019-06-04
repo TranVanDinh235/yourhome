@@ -1,4 +1,4 @@
-package com.example.homedy.NewPost;
+package com.example.homedy.UpdatePost;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,14 +21,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.homedy.BottomSheetMain;
 import com.example.homedy.Post;
 import com.example.homedy.IPaddress;
 import com.example.homedy.NewPost.Image.Image;
 import com.example.homedy.NewPost.Image.ImageActivity;
+import com.example.homedy.NewPost.Message;
+import com.example.homedy.NewPost.NewPostActivity;
+import com.example.homedy.NewPost.TypeRoomDialog;
 import com.example.homedy.R;
 import com.google.android.gms.common.api.Status;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
@@ -39,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -52,22 +52,25 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.Query;
 
+public class UpdatePostActivity extends AppCompatActivity implements TypeRoomDialog.DialogPost3Listener{
 
-public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog.DialogPost3Listener {
-    private static final int REQUEST_IMAGE = 66;
+    private static final int REQUEST_UPDATE_IMAGE = 65;
+    private static final String POS = "pos";
 
     private SharedPreferences sharedPreferences;
-    private ArrayList<Post> posts = Post.getHomeItemsPost();
     private ArrayList<Bitmap> bitmaps = Image.getBitmaps();
     private ArrayList<String> paths = Image.getPaths();
-    private Post newPost = new Post();
+    private ArrayList<Post> posts = Post.getHomeItemsPost();
+    private Post post;
     private String email;
+    private int position;
     private static final String TAG = "image path ";
 
     String ip = IPaddress.getIp();
-    private String UPLOAD_URL = ip;
-
+    private String UPLOAD_URL = ip + "post/updatepost/";
 
     private RadioGroup posttype;
     private RadioButton rented;
@@ -80,21 +83,22 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
     private EditText typeroom;
     private Button addImage;
     private Button btnpost;
-    AutocompleteSupportFragment autocompleteFragment;
-    private String POS = "pos";
+    AutocompleteSupportFragment addressAuto;
 
     FloatingActionButton floatingActionButton;
     BottomAppBar bottomAppBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post);
-
+        final Intent intent = this.getIntent();
+        final Bundle bundle = intent.getBundleExtra("data");
+        position = bundle.getInt(POS, 0);
+        Log.d(TAG, "onCreate: " + position);
+        post = posts.get(position);
         sharedPreferences = getSharedPreferences("user", Context.MODE_PRIVATE);
-        email = sharedPreferences.getString("name", "trandinhcn@gmail.com");
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyA2d8RYsPfPLKspnYnQciZDFBJGbFyNDUc");
-        }
+        email = sharedPreferences.getString("email","trandinhcn@gmail.com");
 
         bitmaps.clear();
         paths.clear();
@@ -104,6 +108,12 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
 
         setSupportActionBar(bottomAppBar);
 
+        bottomAppBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         posttype = (RadioGroup) findViewById(R.id.radioGroup_newpost_type);
         grafted = (RadioButton) findViewById(R.id.radioButton_newpost_oGhep);
         rented = (RadioButton) findViewById(R.id.radioButton_newpost_forRent);
@@ -113,12 +123,6 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
         phone = (EditText) findViewById(R.id.edt_newpost_phone);
         description = (EditText) findViewById(R.id.edt_newpost_description);
         typeroom = (EditText) findViewById(R.id.edt_newpost_typeRoom);
-        bottomAppBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         typeroom.setFocusable(false);
         typeroom.setOnClickListener(new View.OnClickListener() {
@@ -129,18 +133,10 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
             }
         });
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(checkPost()) UploadImage();
-            }
-        });
-
-        autocompleteFragment = (AutocompleteSupportFragment)
+        addressAuto = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-        autocompleteFragment.setHint("Địa chỉ ");
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        addressAuto.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        addressAuto.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 String location = place.getName();
@@ -148,9 +144,9 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
                 try {
                     List<Address> addresses= gc.getFromLocationName(location, 5);
                     Address address = addresses.get(0);
-                    newPost.setAddress(place.getName());
-                    newPost.setLat(address.getLatitude());
-                    newPost.setLng(address.getLongitude());
+                    post.setAddress(place.getName());
+                    post.setLat(address.getLatitude());
+                    post.setLng(address.getLongitude());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -161,52 +157,74 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
                 Log.i(TAG, "An error occurred: " + status);
             }
         });
+
+        setData();
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkPost()) uploadImage();
+            }
+        });
+    }
+
+    public void setData(){
+        if(post.getPosttype().equals("Cho thuê"))
+            rented.setChecked(true);
+        else grafted.setChecked(true);
+        addressAuto.setText(post.getAddress());
+        title.setText(post.getTitle());
+        typeroom.setText(post.getTyperoom());
+        rent.setText(String.valueOf(post.getRent()));
+        area.setText(String.valueOf(post.getArea()));
+        phone.setText(post.getPhone());
+        description.setText(post.getDescription());
     }
 
     public boolean checkPost() {
         if (posttype.getCheckedRadioButtonId() == -1) {
-            Toast.makeText(NewPostActivity.this, "Bạn chưa chọn loại tin!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdatePostActivity.this, "Bạn chưa chọn loại tin!!", Toast.LENGTH_SHORT).show();
             return false;
         }
         else if(rented.isChecked()){
-            newPost.setPosttype("Cho thuê");
-        } else newPost.setPosttype("Ở ghép");
+            post.setPosttype("Cho thuê");
+        } else post.setPosttype("Ở ghép");
 
 
         if (title.getText().toString().matches("")) {
-            Toast.makeText(NewPostActivity.this, "Bạn chưa có tiêu đề của tin", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdatePostActivity.this, "Bạn chưa có tiêu đề của tin", Toast.LENGTH_SHORT).show();
             return false;
-        } else newPost.setTitle(title.getText().toString());
+        } else post.setTitle(title.getText().toString());
 
         if (typeroom.getText().toString().matches("")) {
-            Toast.makeText(NewPostActivity.this, "Bạn chưa chọn kiểu phòng", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdatePostActivity.this, "Bạn chưa chọn kiểu phòng", Toast.LENGTH_SHORT).show();
             return false;
-        }else newPost.setTyperoom(typeroom.getText().toString());
+        }else post.setTyperoom(typeroom.getText().toString());
 
         if (rent.getText().toString().matches("")) {
-            Toast.makeText(NewPostActivity.this, "Bạn chưa nhập giá cho thuê ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdatePostActivity.this, "Bạn chưa nhập giá cho thuê ", Toast.LENGTH_SHORT).show();
             return false;
-        } else newPost.setRent(Integer.parseInt(rent.getText().toString()));
+        } else post.setRent(Integer.parseInt(rent.getText().toString()));
 
         if (area.getText().toString().matches("")) {
-            Toast.makeText(NewPostActivity.this, "Bạn chưa nhập diện tích cho thuê", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdatePostActivity.this, "Bạn chưa nhập diện tích cho thuê", Toast.LENGTH_SHORT).show();
             return false;
-        } else newPost.setArea(Integer.parseInt(area.getText().toString()));
+        } else post.setArea(Integer.parseInt(area.getText().toString()));
 
-        if(newPost.getAddress().equals("")){
-            Toast.makeText(NewPostActivity.this, "Bạn chưa nhập địa chỉ", Toast.LENGTH_SHORT).show();
+        if(post.getAddress().equals("")){
+            Toast.makeText(UpdatePostActivity.this, "Bạn chưa nhập địa chỉ", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (phone.getText().toString().matches("")) {
-            Toast.makeText(NewPostActivity.this, "Bạn chưa nhập số điện thoại", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdatePostActivity.this, "Bạn chưa nhập số điện thoại", Toast.LENGTH_SHORT).show();
             return false;
-        } else newPost.setPhone(phone.getText().toString());
+        } else post.setPhone(phone.getText().toString());
 
         if (description.getText().toString().matches("")) {
-            Toast.makeText(NewPostActivity.this, "Bạn chưa nhập mô tả", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdatePostActivity.this, "Bạn chưa nhập mô tả", Toast.LENGTH_SHORT).show();
             return false;
-        } else newPost.setDescription((description.getText().toString()));
+        } else post.setDescription((description.getText().toString()));
         return true;
     }
 
@@ -216,14 +234,14 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
     }
 
     public interface FileUploadService {
-        @POST("post/newpost")
-        Call<Message> uploadImage(@Body RequestBody requestBody);
+        @POST("/post")
+        Call<Message> uploadImage(@Body RequestBody requestBody, @Query("image") ArrayList<String> image);
     }
 
-    public void UploadImage(){
+    public void uploadImage(){
         final ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(NewPostActivity.this);
-        progressDialog.setMessage("Dang tai len");
+        progressDialog = new ProgressDialog(UpdatePostActivity.this);
+        progressDialog.setMessage("Đang tải lên...");
         progressDialog.show();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(UPLOAD_URL)
@@ -234,16 +252,20 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
         MultipartBody.Builder builder = new MultipartBody.Builder();
         builder.setType(MultipartBody.FORM);
         builder.addFormDataPart("email", email );
-        builder.addFormDataPart("posttype", newPost.getPosttype());
-        builder.addFormDataPart("title", newPost.getTitle());
-        builder.addFormDataPart("description", newPost.getDescription());
-        builder.addFormDataPart("typeroom", newPost.getTyperoom() );
-        builder.addFormDataPart("gia", String.valueOf(newPost.getRent()));
-        builder.addFormDataPart("dientich", String.valueOf(newPost.getArea()));
-        builder.addFormDataPart("lat", String.valueOf(newPost.getLat()));
-        builder.addFormDataPart("lng", String.valueOf(newPost.getLng()));
-        builder.addFormDataPart("address", newPost.getAddress());
-        builder.addFormDataPart("phonepost", newPost.getPhone());
+        builder.addFormDataPart("posttype", post.getPosttype());
+        builder.addFormDataPart("typeroom", post.getTyperoom() );
+        builder.addFormDataPart("gia", String.valueOf(post.getRent()));
+        builder.addFormDataPart("dientich", String.valueOf(post.getArea()));
+        builder.addFormDataPart("lat", String.valueOf(post.getLat()));
+        builder.addFormDataPart("lng", String.valueOf(post.getLng()));
+        builder.addFormDataPart("address", post.getAddress());
+        builder.addFormDataPart("phonepost", post.getPhone());
+        builder.addFormDataPart("title", post.getTitle());
+        builder.addFormDataPart("description", post.getDescription());
+        for(int i = 0; i < post.getUrl_image().size(); i ++){
+            builder.addFormDataPart(i + "images", post.getUrl_image().get(i));
+        }
+
         try {
             for (String s : paths) {
                 File file = new File(s);
@@ -258,25 +280,24 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
 
 
         MultipartBody requestBody = builder.build();
-        FileUploadService service = retrofit.create(FileUploadService.class);
-        Call<Message> call = service.uploadImage(requestBody);
+        UpdatePostActivity.FileUploadService service = retrofit.create(UpdatePostActivity.FileUploadService.class);
+        Call<Message> call = service.uploadImage(requestBody, post.getUrl_image());
         call.enqueue(new Callback<Message>() {
             @Override
             public void onResponse(Call<Message> call, Response<Message> response) {
                 progressDialog.dismiss();
-                if (response.code() == 200) {
-                    Toast.makeText(NewPostActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                Message message = response.body();
+                if (message.getMessage().equals("Success")) {
+                    Toast.makeText(UpdatePostActivity.this, "success", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(UpdatePostActivity.this, "fail", Toast.LENGTH_SHORT).show();
                 }
-                setResult(RESULT_OK);
-                finish();
             }
 
             @Override
             public void onFailure(Call<Message> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.e(TAG, t.toString());
-                setResult(RESULT_OK);
-                finish();
             }
         });
     }
@@ -288,12 +309,11 @@ public class NewPostActivity extends AppCompatActivity implements TypeRoomDialog
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(NewPostActivity.this, ImageActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt(POS, -1);
-        intent.putExtra("images", bundle);
-        startActivityForResult(intent, REQUEST_IMAGE);
+        Intent intent1 = new Intent(UpdatePostActivity.this, ImageActivity.class );
+        Bundle bundle1 = new Bundle();
+        bundle1.putInt(POS, position);
+        intent1.putExtra("images", bundle1);
+        startActivityForResult(intent1, REQUEST_UPDATE_IMAGE);
         return super.onOptionsItemSelected(item);
     }
 }
-

@@ -2,7 +2,6 @@ package com.example.homedy.Home;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,26 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.homedy.IPaddress;
+import com.example.homedy.Post;
 import com.example.homedy.R;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.android.volley.VolleyLog.TAG;
 import static com.android.volley.VolleyLog.e;
@@ -40,9 +34,9 @@ public class HomeFragment extends Fragment {
     private static final String KEY_TAB = "key_tab";
     private String ip = IPaddress.getIp();
     private String url = ip + "post/getall";
-    ArrayList<HomeItem> homeItems = HomeItem.getHomeItems();
+    ArrayList<Post> posts = Post.getPosts();
 
-    private RecyclerViewHomeAdapter recyclerViewHomeAdapter;
+    private HomeAdapter homeAdapter;
     private OnHomeFragmentListener mListener;
 
     public HomeFragment() {
@@ -79,49 +73,51 @@ public class HomeFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         progressDialog.show();
 
+        posts.clear();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, url, null,  new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 if(response != null) {
                     Log.d(TAG, "onResponse: response");
-                    if(homeItems.size() == 0) {
+                    if(posts.size() == 0) {
                         for (int i = 0; i < response.length(); i++) {
-                            HomeItem homeItem = new HomeItem();
+                            Post post = new Post();
                             try {
                                 JSONObject jsonObject = response.getJSONObject(response.length() - 1 - i);
-                                homeItem.id = jsonObject.getString("_id");
-                                homeItem.title = jsonObject.getString("title");
-                                homeItem.description = jsonObject.getString("description");
-                                homeItem.name = jsonObject.getString("provider");
-                                homeItem.gia = jsonObject.getInt("gia");
-                                homeItem.area = jsonObject.getInt("dientich");
+                                post.setId(jsonObject.getString("_id"));
+                                post.setTitle(jsonObject.getString("title"));
+                                post.setDescription(jsonObject.getString("description"));
+                                post.setName(jsonObject.getString("provider"));
+                                post.setRent(jsonObject.getInt("gia"));
+                                post.setArea(jsonObject.getInt("dientich"));
                                 JSONArray jsonArray = jsonObject.getJSONArray("images");
                                 if (jsonArray.length() != 0)
                                     for(int j = 0; j < jsonArray.length(); j ++){
-                                        homeItem.getUrl_image().add(ip + jsonArray.getString(j));
+                                        post.getUrl_image().add(ip + jsonArray.getString(j));
                                     }
-                                else homeItem.getUrl_image().add("default");
-                                homeItem.time = jsonObject.getString("time");
-                                homeItem.address = jsonObject.getString("address");
-                                homeItem.posttype = jsonObject.getString("posttype");
-                                homeItem.phone = jsonObject.getString("phonepost");
-                                homeItem.typeroom = jsonObject.getString("typeroom");
-                                homeItem.lat = jsonObject.getDouble("lat");
-                                homeItem.lng = jsonObject.getDouble("lng");
+                                else post.getUrl_image().add("default");
+                                post.setTime(jsonObject.getString("time"));
+                                post.setAddress(jsonObject.getString("address"));
+                                post.setPosttype(jsonObject.getString("posttype"));
+                                post.setPhone(jsonObject.getString("phonepost"));
+                                post.setTyperoom(jsonObject.getString("typeroom"));
+                                post.setLat(jsonObject.getDouble("lat"));
+                                post.setLng(jsonObject.getDouble("lng"));
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            homeItems.add(homeItem);
+                            posts.add(post);
                         }
                     }
-                    Log.d(TAG, String.valueOf(homeItems.size()));
+                    Log.d(TAG, String.valueOf(posts.size()));
                 }
                 Log.d(TAG, "onResponse: ");
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
                 progressDialog.dismiss();
             }
         });
@@ -130,7 +126,7 @@ public class HomeFragment extends Fragment {
         queue.add(jsonArrayRequest);
 
         // tri hoan main thread
-        if(homeItems.size() == 0) {
+        if(posts.size() == 0) {
             new android.os.Handler().postDelayed(
                     new Runnable() {
                         public void run() {
@@ -141,14 +137,14 @@ public class HomeFragment extends Fragment {
         }
         else progressDialog.dismiss();
         RecyclerView rvHomeItem = (RecyclerView) view.findViewById(R.id.rv_home);
-        recyclerViewHomeAdapter = new RecyclerViewHomeAdapter();
-        rvHomeItem.setAdapter(recyclerViewHomeAdapter);
+        homeAdapter = new HomeAdapter();
+        rvHomeItem.setAdapter(homeAdapter);
         rvHomeItem.setLayoutManager(new LinearLayoutManager(context));
         return view;
     }
 
     public void load(){
-        recyclerViewHomeAdapter.notifyDataSetChanged();
+        homeAdapter.notifyDataSetChanged();
     }
 
 

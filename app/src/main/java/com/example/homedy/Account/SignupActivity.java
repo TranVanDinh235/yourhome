@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.homedy.IPaddress;
 import com.example.homedy.R;
 
 import butterknife.ButterKnife;
@@ -18,6 +19,8 @@ import butterknife.InjectView;
 public class SignupActivity extends AppCompatActivity {
 
     private static final String TAG = "SignupActivity";
+    private String ip = IPaddress.getIp();
+    private String url = ip + "user/signup";
 
     @InjectView(R.id.input_name) EditText _nameText;
     @InjectView(R.id.input_email) EditText _emailText;

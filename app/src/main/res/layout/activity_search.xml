@@ -10,7 +10,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp">
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp">
@@ -111,30 +110,32 @@
                     android:inputType="number" />
             </LinearLayout>
         </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/replyorange"
+        app:fabSize="normal"
+        app:borderWidth="0dp"
+        android:transitionName="@string/fab_transition"
+        android:src="@drawable/ic_my_location_black_24dp"
+        app:layout_anchor="@id/navigation"/>
     <android.support.design.bottomappbar.BottomAppBar
-        android:id="@+id/navigation_search"
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
         app:backgroundTint="@color/replyblue2"
         android:paddingTop="8dp"
         app:fabAlignmentMode="center"
-        app:fabCradleMargin="10dp"
-        app:fabCradleRoundedCornerRadius="12dp"
+        app:fabCradleMargin="8dp"
+        app:fabCradleRoundedCornerRadius="0dp"
         app:fabCradleVerticalOffset="5dp"
+        android:transitionName="@string/navigation_transition"
         app:navigationIcon="@drawable/ic_menu_black_24dp"
         app:hideOnScroll="true"
-        android:transitionName="navigationbar"
         app:layout_scrollFlags="scroll|enterAlways">
     </android.support.design.bottomappbar.BottomAppBar>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_navigation_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/replyorange"
-        app:fabSize="normal"
-        app:borderWidth="0dp"
-        android:transitionName="floatactionbutton"
-        android:src="@drawable/ic_my_location_black_24dp"
-        app:layout_anchor="@id/navigation_search"/>
+
+
 </android.support.design.widget.CoordinatorLayout>

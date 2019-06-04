@@ -1,11 +1,9 @@
-package com.example.homedy.Post;
+package com.example.homedy.Posts;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -22,7 +19,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.homedy.Home.HomeItem;
+import com.example.homedy.Account.BottomSheetAccount;
+import com.example.homedy.Post;
 import com.example.homedy.IPaddress;
 import com.example.homedy.R;
 
@@ -35,19 +33,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 import static com.android.volley.VolleyLog.TAG;
-
 public class PostFragment extends Fragment{
     private static final int REQUEST_NEW_POST = 40;
     private static final String KEY_TAG = "key_tag";
     private int keyTag;
     private OnPostFragmentListener mListener;
-    private RecycleViewPostAdapter recycleViewPostAdapter;
+    private PostsAdapter postsAdapter;
     String ip = IPaddress.getIp();
     String url = ip + "post/getpost";
-    ArrayList<HomeItem> homeItems = HomeItem.getHomeItemsPost();
+    ArrayList<Post> posts = Post.getHomeItemsPost();
 
 
     public PostFragment() {
@@ -66,7 +62,6 @@ public class PostFragment extends Fragment{
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             keyTag = getArguments().getInt(KEY_TAG);
-
         }
     }
 
@@ -85,6 +80,7 @@ public class PostFragment extends Fragment{
 
         Map<String, String> postParam= new HashMap<String, String>();
         postParam.put("email", sharedPreferences.getString("email", "trandinhcn@gmail.com"));
+        posts.clear();
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         progressDialog.show();
@@ -97,38 +93,38 @@ public class PostFragment extends Fragment{
             public void onResponse(JSONArray response) {
                 if(response != null) {
                     Log.d(TAG, "onResponse: response");
-                    if(homeItems.size() == 0) {
+                    if(posts.size() == 0) {
                         for (int i = 0; i < response.length(); i++) {
-                            HomeItem homeItem = new HomeItem();
+                            Post post = new Post();
                             try {
                                 JSONObject jsonObject = response.getJSONObject(response.length() - 1 - i);
-                                homeItem.setId(jsonObject.getString("_id"));
-                                homeItem.setTitle(jsonObject.getString("title"));
-                                homeItem.setDescription(jsonObject.getString("description"));
-                                homeItem.setName(jsonObject.getString("provider"));
-                                homeItem.setGia(jsonObject.getInt("gia"));
-                                homeItem.setArea(jsonObject.getInt("dientich"));
+                                post.setId(jsonObject.getString("_id"));
+                                post.setTitle(jsonObject.getString("title"));
+                                post.setDescription(jsonObject.getString("description"));
+                                post.setName(jsonObject.getString("provider"));
+                                post.setRent(jsonObject.getInt("gia"));
+                                post.setArea(jsonObject.getInt("dientich"));
                                 JSONArray jsonArray = jsonObject.getJSONArray("images");
                                 if (jsonArray.length() != 0)
                                     for(int j = 0; j < jsonArray.length(); j ++){
-                                        homeItem.getUrl_image().add(ip + jsonArray.getString(j));
+                                        post.getUrl_image().add(jsonArray.getString(j));
                                     }
-                                else homeItem.getUrl_image().add("default");
-                                homeItem.setTime(jsonObject.getString("time"));
-                                homeItem.setAddress(jsonObject.getString("address"));
-                                homeItem.setPosttype(jsonObject.getString("posttype"));
-                                homeItem.setPhone(jsonObject.getString("phonepost"));
-                                homeItem.setTyperoom(jsonObject.getString("typeroom"));
-                                homeItem.setLat(jsonObject.getDouble("lat"));
-                                homeItem.setLng(jsonObject.getDouble("lng"));
+                                else post.getUrl_image().add("default");
+                                post.setTime(jsonObject.getString("time"));
+                                post.setAddress(jsonObject.getString("address"));
+                                post.setPosttype(jsonObject.getString("posttype"));
+                                post.setPhone(jsonObject.getString("phonepost"));
+                                post.setTyperoom(jsonObject.getString("typeroom"));
+                                post.setLat(jsonObject.getDouble("lat"));
+                                post.setLng(jsonObject.getDouble("lng"));
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            homeItems.add(homeItem);
+                            posts.add(post);
                         }
                     }
-                    Log.d(TAG, String.valueOf(homeItems.size()));
+                    Log.d(TAG, String.valueOf(posts.size()));
                 }
                 Log.d(TAG, "onResponse: ");
             }
@@ -150,7 +146,7 @@ public class PostFragment extends Fragment{
         queue.add(jsonArrayRequest);
 
         // tri hoan main thread
-        if(homeItems.size() == 0) {
+        if(posts.size() == 0) {
             new android.os.Handler().postDelayed(
                     new Runnable() {
                         public void run() {
@@ -162,8 +158,8 @@ public class PostFragment extends Fragment{
         else progressDialog.dismiss();
 
         RecyclerView rvPostItem = (RecyclerView) view.findViewById(R.id.rv_post);
-        recycleViewPostAdapter = new RecycleViewPostAdapter(this.getContext());
-        rvPostItem.setAdapter(recycleViewPostAdapter);
+        postsAdapter = new PostsAdapter(this.getContext());
+        rvPostItem.setAdapter(postsAdapter);
         rvPostItem.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
 
@@ -172,7 +168,7 @@ public class PostFragment extends Fragment{
 
 
     public void load(){
-        recycleViewPostAdapter.notifyDataSetChanged();
+        postsAdapter.notifyDataSetChanged();
     }
 
 
@@ -198,6 +194,7 @@ public class PostFragment extends Fragment{
         super.onDetach();
         mListener = null;
     }
+
 
     public interface OnPostFragmentListener {
         // TODO: Update argument type and name

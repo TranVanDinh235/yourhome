@@ -32,7 +32,7 @@ import java.util.Date;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class DialogPost2Fragment extends DialogFragment {
+public class PickImageDialog extends DialogFragment {
     private static final int REQUEST_ID_IMAGE_CAPTURE = 100;
     private static final int REQUEST_ID_READ_WRITE_PERMISSION = 99;
     private static final int GALLERY_REQUEST_CODE = 98;
@@ -46,10 +46,10 @@ public class DialogPost2Fragment extends DialogFragment {
     @InjectView(R.id.btn_dialog_camera) Button _cammeraDialogButton;
     @InjectView(R.id.btn_dialog_fileimage) Button _imageFileDialogButton;
 
-    public static DialogPost2Fragment newInstance(int buttonId) {
+    public static PickImageDialog newInstance(int buttonId) {
         Bundle args = new Bundle();
         args.putInt(KEY_TAB, buttonId);
-        DialogPost2Fragment fragment = new DialogPost2Fragment();
+        PickImageDialog fragment = new PickImageDialog();
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +60,7 @@ public class DialogPost2Fragment extends DialogFragment {
         super.onCreateDialog(savedInstanceState);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.fragment_dialog_2, null);
+        View view = inflater.inflate(R.layout.fragment_pickimage, null);
         ButterKnife.inject(this, view);
 
         _cammeraDialogButton.setText("Camera");
@@ -100,9 +100,9 @@ public class DialogPost2Fragment extends DialogFragment {
                 Environment.DIRECTORY_PICTURES);
         pictureImagePath = storageDir.getAbsolutePath() + "/" + imageFileName;
         File file = new File(pictureImagePath);
-        //Uri outputFileUri = Uri.fromFile(file);
         Uri outputFileUri = FileProvider.getUriForFile(getContext(),  "com.example.homedy.fileprovider" , file);
         paths.add(pictureImagePath);
+
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);

@@ -1,31 +1,30 @@
-package com.example.homedy.Home;
-
-import com.example.homedy.R;
-
+package com.example.homedy;
 import java.util.ArrayList;
 
-public class HomeItem {
-    String name;
-    String time;
-    String title;
-    String description;
-    int area;
-    int gia;
-    ArrayList<String> url_image = new ArrayList<>();
-    String id;
-    String address;
-    String phone;
-    String posttype;
-    String typeroom;
-    Double lat;
-    Double lng;
-    String name_person;
-    String phone_person;
+public class Post {
+    private String name;
+    private String time;
+    private String title;
+    private String description;
+    private int area;
+    private int rent;
+    private ArrayList<String> url_image = new ArrayList<>();
+    private String id;
+    private String address;
+    private String phone;
+    private String posttype;
+    private String typeroom;
+    private Double lat;
+    private Double lng;
+    private String name_person;
+    private String phone_person;
 
-    private static ArrayList<HomeItem> homeItems = new ArrayList<>();
-    private static ArrayList<HomeItem> homeItemsSearch = new ArrayList<>();
-    private static ArrayList<HomeItem> homeItemsPost = new ArrayList<>();
-    private static ArrayList<HomeItem> homeItemsSearchByMap = new ArrayList<>();
+    private static ArrayList<Post> posts = new ArrayList<>();
+    private static ArrayList<Post> homeItemsSearches = new ArrayList<>();
+    private static ArrayList<Post> homeItemsPost = new ArrayList<>();
+    private static ArrayList<Post> homeItemsSearchByMap = new ArrayList<>();
+
+    public Post(){}
 
     public String getName() {
         return name;
@@ -83,12 +82,12 @@ public class HomeItem {
         this.lng = lng;
     }
 
-    public int getGia() {
-        return gia;
+    public int getRent() {
+        return rent;
     }
 
-    public void setGia(int gia) {
-        this.gia = gia;
+    public void setRent(int rent) {
+        this.rent = rent;
     }
 
     public ArrayList<String> getUrl_image() {
@@ -158,36 +157,36 @@ public class HomeItem {
 
 
 
-    public static ArrayList<HomeItem> getHomeItems(){
-        return homeItems;
+    public static ArrayList<Post> getPosts(){
+        return posts;
     }
 
 
-    public static void setHomeItems(ArrayList<HomeItem> homeItems) {
-        HomeItem.homeItems = homeItems;
+    public static void setPosts(ArrayList<Post> posts) {
+        Post.posts = posts;
     }
 
-    public static ArrayList<HomeItem> getHomeItemsSearch() {
-        return homeItemsSearch;
+    public static ArrayList<Post> getHomeItemsSearches() {
+        return homeItemsSearches;
     }
 
-    public static void setHomeItemsSearch(ArrayList<HomeItem> homeItemsSearch) {
-        HomeItem.homeItemsSearch = homeItemsSearch;
+    public static void setHomeItemsSearches(ArrayList<Post> homeItemsSearches) {
+        Post.homeItemsSearches = homeItemsSearches;
     }
 
-    public static ArrayList<HomeItem> getHomeItemsPost() {
+    public static ArrayList<Post> getHomeItemsPost() {
         return homeItemsPost;
     }
 
-    public static void setHomeItemsPost(ArrayList<HomeItem> homeItemsPost) {
-        HomeItem.homeItemsPost = homeItemsPost;
+    public static void setHomeItemsPost(ArrayList<Post> homeItemsPost) {
+        Post.homeItemsPost = homeItemsPost;
     }
 
-    public static ArrayList<HomeItem> getHomeItemsSearchByMap() {
+    public static ArrayList<Post> getHomeItemsSearchByMap() {
         return homeItemsSearchByMap;
     }
 
-    public static void setHomeItemsSearchByMap(ArrayList<HomeItem> homeItemsSearchByMap) {
-        HomeItem.homeItemsSearchByMap = homeItemsSearchByMap;
+    public static void setHomeItemsSearchByMap(ArrayList<Post> homeItemsSearchByMap) {
+        Post.homeItemsSearchByMap = homeItemsSearchByMap;
     }
 }

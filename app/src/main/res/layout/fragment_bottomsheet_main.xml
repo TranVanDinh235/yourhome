@@ -44,7 +44,7 @@
             style="@style/headline6"
             android:textColor="@color/replyblue1"
             android:layout_marginLeft="8dp"
-            android:text="Trang cá nhân"/>
+            android:text="Đăng nhập"/>
     </LinearLayout>
     <TextView
         android:layout_marginTop="8dp"

@@ -19,8 +19,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColorHint="@color/white">
+        android:layout_marginTop="8dp">
 
         <EditText
             android:id="@+id/input_email"
@@ -35,8 +34,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:textColorHint="@color/white">
+        android:layout_marginBottom="8dp">
 
         <EditText
             android:id="@+id/input_password"
@@ -72,14 +70,29 @@
             android:padding="10dp"
             android:src="@drawable/ic_google_plus" />
 
-        <ImageButton
-            android:id="@+id/btn_signin_fb"
+        <FrameLayout
+            android:layout_below="@+id/no_network_bar"
+            android:id="@+id/FrameLayout1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/btn_signin_google"
-            android:padding="10dp"
-            android:src="@drawable/ic_facebook_login" />
+            android:layout_height="wrap_content">
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/btn_signin_fb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_signin_google"
+                android:padding="10dp"
+                android:src="@drawable/ic_facebook_login" />
+        </FrameLayout>
+
+
     </LinearLayout>
 
 

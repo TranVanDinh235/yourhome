@@ -6,36 +6,55 @@
         android:id="@+id/btn_dialog_phongtro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/replyblue1"
+        style="@style/subtitle1"
+        android:background="@color/colordefault"
+        android:textAllCaps="false"
         android:text="Phòng trọ"
-        android:textAllCaps="false"/>
+        />
     <Button
         android:id="@+id/btn_dialog_canho"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/subtitle1"
         android:text="Căn hộ"
+        android:textColor="@color/replyblue1"
+        android:background="@color/colordefault"
         android:textAllCaps="false"/>
     <Button
         android:id="@+id/btn_dialog_canhomini"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/subtitle1"
+        android:textColor="@color/replyblue1"
+        android:background="@color/colordefault"
         android:text="Căn hộ mini"
         android:textAllCaps="false"/>
     <Button
         android:id="@+id/btn_dialog_nhanguyencan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/subtitle1"
         android:text="Nhà nguyên căn"
+        android:textColor="@color/replyblue1"
+        android:background="@color/colordefault"
         android:textAllCaps="false"/>
     <Button
         android:id="@+id/btn_dialog_bietthu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/replyblue1"
+        android:background="@color/colordefault"
+        style="@style/subtitle1"
         android:text="Biệt thự"
         android:textAllCaps="false"/>
     <Button
         android:id="@+id/btn_dialog_kitucxa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/replyblue1"
+        android:background="@color/colordefault"
+        style="@style/subtitle1"
         android:text="Kí túc xá"
         android:textAllCaps="false"/>
 </LinearLayout>

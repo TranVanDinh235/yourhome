@@ -1,9 +1,10 @@
-package com.example.homedy.Post;
+package com.example.homedy.Posts;
 
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.homedy.Home.HomeItem;
+import com.example.homedy.Post;
 import com.example.homedy.IPaddress;
+import com.example.homedy.NewPost.NewPostActivity;
 import com.example.homedy.R;
+import com.example.homedy.UpdatePost.UpdatePostActivity;
 
 import org.json.JSONObject;
 
@@ -33,16 +36,16 @@ import static com.android.volley.VolleyLog.TAG;
 public class BottomSheetFragment extends BottomSheetDialogFragment {
 
     private static String POS = "pos";
-    TextView edit;
-    TextView delete;
-    TextView share;
-    TextView ok;
-    TextView cancel;
-    int pos;
-    String ip = IPaddress.getIp();
-    String url = ip + "post/delete";
-    ArrayList<HomeItem> homeItems = HomeItem.getHomeItemsPost();
-    PostListener postListener;
+    private TextView edit;
+    private TextView delete;
+    private TextView share;
+    private TextView ok;
+    private TextView cancel;
+    private int position;
+    private String ip = IPaddress.getIp();
+    private String url = ip + "post/delete";
+    private ArrayList<Post> posts = Post.getHomeItemsPost();
+    private PostListener postListener;
 
     public BottomSheetFragment() {
         // Required empty public constructor
@@ -60,7 +63,8 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
-            pos = getArguments().getInt("pos", 0);
+            position = getArguments().getInt("pos", 0);
+        Log.d(TAG, "onCreate: " + position);
     }
 
     @Override
@@ -70,16 +74,14 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.fragment_bottomsheet, container, false);
         edit = view.findViewById(R.id.fragment_bottom_sheet_edit);
         delete = view.findViewById(R.id.fragment_bottom_sheet_delete);
-        share = view.findViewById(R.id.fragment_bottom_sheet_share);
         ok = view.findViewById(R.id.fragment_bottom_sheet_confirm_ok);
         cancel = view.findViewById(R.id.fragment_bottom_sheet_confirm_no);
         edit.setClickable(true);
         delete.setClickable(true);
-        share.setClickable(true);
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                update();
             }
         });
 
@@ -90,12 +92,6 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
             }
         });
 
-        share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         return view;
     }
@@ -109,8 +105,8 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 final ProgressDialog progressDialog = new ProgressDialog(getActivity(),R.style.Theme_AppCompat_DayNight_Dialog);
                 progressDialog.setIndeterminate(true);
-                HomeItem homeItem = homeItems.get(pos);
-                String email = homeItem.getName();
+                Post post = posts.get(position);
+                String email = post.getName();
 
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
                 progressDialog.show();
@@ -123,7 +119,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                postListener.deletePost(pos);
+                                postListener.deletePost(position);
                             }
                         },
                         new Response.ErrorListener() {
@@ -165,6 +161,14 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         cancel.setClickable(false);
     }
 
+    public void update(){
+        Intent intent = new Intent(getActivity(), UpdatePostActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(POS, position);
+        intent.putExtra("data", bundle);
+        startActivity(intent);
+    }
+
 //    @Override
 //    public void onAttach(Context context) {
 //        super.onAttach(context);
@@ -177,5 +181,6 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
 //    }
     interface PostListener{
         void deletePost(int pos);
+        void updatePost(int pos);
     }
 }

@@ -48,6 +48,7 @@ public class BottomSheetMain extends BottomSheetDialogFragment {
             signout.setTextColor(getResources().getColor(R.color.bottomsheettext));
             post.setClickable(true);
             signout.setClickable(true);
+            profile.setText("Trang cá nhân");
         }
         post.setOnClickListener(new View.OnClickListener() {
             @Override

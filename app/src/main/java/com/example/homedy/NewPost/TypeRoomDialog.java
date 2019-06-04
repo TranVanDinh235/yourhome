@@ -16,7 +16,7 @@ import com.example.homedy.R;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class  DialogPost3Fragment extends DialogFragment {
+public class TypeRoomDialog extends DialogFragment {
 
     @InjectView(R.id.btn_dialog_canho) Button _canhoButton;
     @InjectView(R.id.btn_dialog_phongtro) Button _phongtroButton;
@@ -37,7 +37,7 @@ public class  DialogPost3Fragment extends DialogFragment {
         super.onCreateDialog(savedInstanceState);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
-        View view = layoutInflater.inflate(R.layout.fragment_dialog_3, null);
+        View view = layoutInflater.inflate(R.layout.fragment_typeroom, null);
         ButterKnife.inject(this, view);
         _canhoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +94,8 @@ public class  DialogPost3Fragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof DialogPost3Fragment.DialogPost3Listener) {
-            mListener = (DialogPost3Fragment.DialogPost3Listener) context;
+        if(context instanceof TypeRoomDialog.DialogPost3Listener) {
+            mListener = (TypeRoomDialog.DialogPost3Listener) context;
         } else throw new RuntimeException(context.toString() + "must implement DialogPost3Listener");
     }
 }

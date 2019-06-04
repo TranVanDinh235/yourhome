@@ -1,16 +1,12 @@
 package com.example.homedy.APost;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.homedy.Home.HomeItem;
+import com.example.homedy.Post;
 import com.example.homedy.IPaddress;
 import com.example.homedy.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -50,7 +46,7 @@ public class APostActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private static final String TAG = "tag";
     private final String POSITION = "key_position";
-    private ArrayList<HomeItem> homeItems = HomeItem.getHomeItems();
+    private ArrayList<Post> posts = Post.getPosts();
     private ImagePagerAdapter imagePagerAdapter;
     private ViewPager viewPager;
     private TextView tvTitle;
@@ -78,7 +74,7 @@ public class APostActivity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_a_post);
         Intent intent = getIntent();
         int position = intent.getIntExtra(POSITION, 0);
-        final HomeItem homeItem = homeItems.get(position);
+        final Post post = posts.get(position);
 
         tvTitle = findViewById(R.id.txt_title_apost);
         tvTypePost = findViewById(R.id.txt_posttype_apost);
@@ -93,26 +89,26 @@ public class APostActivity extends AppCompatActivity implements OnMapReadyCallba
         tvEmail = findViewById(R.id.txt_email_apost);
 
 
-        tvTypePost.setText(homeItem.getPosttype());
+        tvTypePost.setText(post.getPosttype());
 
 
 
-        tvTypeRoom.setText(homeItem.getTyperoom());
+        tvTypeRoom.setText(post.getTyperoom());
 
-        tvTitle.setText(homeItem.getTitle());
-        tvPhone.setText(homeItem.getPhone());
-        tvGia.setText(String.valueOf(homeItem.getGia()) + "đ");
-        tvDienTich.setText(String.valueOf(homeItem.getArea()) + " m2");
-        tvAddress.setText(homeItem.getAddress());
-        tvDes.setText(homeItem.getDescription());
-        tvEmail.setText(homeItem.getName());
-        lat = homeItem.getLat();
-        lng = homeItem.getLng();
+        tvTitle.setText(post.getTitle());
+        tvPhone.setText(post.getPhone());
+        tvGia.setText(String.valueOf(post.getRent()) + "đ");
+        tvDienTich.setText(String.valueOf(post.getArea()) + " m2");
+        tvAddress.setText(post.getAddress());
+        tvDes.setText(post.getDescription());
+        tvEmail.setText(post.getName());
+        lat = post.getLat();
+        lng = post.getLng();
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
         Map<String, String> postParam= new HashMap<String, String>();
-        postParam.put("email", homeItem.getName());
+        postParam.put("email", post.getName());
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 URL_LOGIN, new JSONObject(postParam),
@@ -120,7 +116,7 @@ public class APostActivity extends AppCompatActivity implements OnMapReadyCallba
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            load(response.getString("name_person") + " - " + homeItem.getTime(),response.getString("phone"));
+                            load(response.getString("name_person") + " - " + post.getTime(),response.getString("phone"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -150,7 +146,7 @@ public class APostActivity extends AppCompatActivity implements OnMapReadyCallba
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.frg_map);
         supportMapFragment.getMapAsync(this);
 
-        imagePagerAdapter = new ImagePagerAdapter(getSupportFragmentManager(), position, homeItem.getUrl_image().size());
+        imagePagerAdapter = new ImagePagerAdapter(getSupportFragmentManager(), position, post.getUrl_image().size());
         viewPager = (ViewPager) findViewById(R.id.vp_image);
         viewPager.setAdapter(imagePagerAdapter);
     }

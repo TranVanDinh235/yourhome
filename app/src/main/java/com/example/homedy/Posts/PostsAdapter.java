@@ -1,9 +1,10 @@
-package com.example.homedy.Search;
+package com.example.homedy.Posts;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,75 +14,98 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.homedy.APost.APostActivity;
-import com.example.homedy.Home.HomeItem;
+import com.example.homedy.Post;
+import com.example.homedy.IPaddress;
+import com.example.homedy.MainActivity;
 import com.example.homedy.R;
 
 import java.util.ArrayList;
 
-public class RecycleViewSearchAdapter extends RecyclerView.Adapter<RecycleViewSearchAdapter.ViewHolder> {
+import static com.android.volley.VolleyLog.TAG;
+
+public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> implements BottomSheetFragment.PostListener {
     private final String POSITION = "key_position";
-    ArrayList<HomeItem> homeItemsSearch = HomeItem.getHomeItemsSearch();
-    ArrayList<HomeItem> homeItems = HomeItem.getHomeItems();
-    ArrayList<Integer> arr = new ArrayList<>();
+    private ArrayList<Post> posts;
+    String ip = IPaddress.getIp();
     Context context;
+    BottomSheetFragment bottomSheetDialog;
+
+    public PostsAdapter(){}
+
+    public PostsAdapter(Context context){
+        this.context = context;
+        posts = Post.getHomeItemsPost();
+    }
 
     @NonNull
     @Override
-    public RecycleViewSearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        this.context = viewGroup.getContext();
-        convert();
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        Context context = viewGroup.getContext();
+
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.home_item, viewGroup, false);
 
-        RecycleViewSearchAdapter.ViewHolder viewHolder = new RecycleViewSearchAdapter.ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewSearchAdapter.ViewHolder viewHolder, int i) {
-        HomeItem homeItem = homeItemsSearch.get(i);
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        Post post = posts.get(i);
         TextView textViewName = viewHolder._namePerson;
         TextView textViewDes = viewHolder._description;
         TextView textViewGia = viewHolder._gia;
         TextView textViewAddress = viewHolder._address;
         TextView textViewTitle = viewHolder._title;
+
         LinearLayout linearLayout = viewHolder.linearLayout;
 
-//        if(homeItem.url_image.equals("default")){
+//        if(post.url_image.equals("default")){
 //            imageView.setImageResource(R.drawable.image1);
 //        }
-        for(int index = 0; index < homeItem.getUrl_image().size(); index ++){
+        for(int index = 0; index < post.getUrl_image().size(); index ++){
             ImageView imageView = new ImageView(context);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
             imageView.setPadding(0, 0, 8,0);
-            Glide.with(viewHolder.itemView).load(homeItem.getUrl_image().get(index)).into(imageView);
+            Glide.with(viewHolder.itemView).load(ip + post.getUrl_image().get(index)).into(imageView);
             linearLayout.addView(imageView);
         }
 
 
-        String name = homeItem.getName() + " - " + homeItem.getTime();
+        String name = post.getName() + " - " + post.getTime();
         textViewName.setText(name);
 
-        String gia = homeItem.getArea() + " m2 - " + homeItem.getGia() + " đ/tháng";
+        String gia = post.getArea() + " m2 - " + post.getRent() + " đ/tháng";
         textViewGia.setText(gia);
 
-        String title = homeItem.getTitle();
+        String title = post.getTitle();
         if(title.length() > 30) title = title.substring(0 , 27) + "...";
         textViewTitle.setText(title);
 
-        String description = homeItem.getDescription();
+        String description = post.getDescription();
         if(description.length() > 32) description = description.substring(0,30) + "...";
         textViewDes.setText(description);
 
-        textViewAddress.setText(homeItem.getAddress());
+        textViewAddress.setText(post.getAddress());
     }
 
     @Override
     public int getItemCount() {
-        return homeItemsSearch.size();
+        return posts.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    @Override
+    public void deletePost(int pos) {
+        removeAt(pos);
+        bottomSheetDialog.dismiss();
+    }
+
+    @Override
+    public void updatePost(int pos) {
+        bottomSheetDialog.dismiss();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         public ImageView _avatar;
         public TextView _namePerson;
         public TextView _title;
@@ -92,6 +116,7 @@ public class RecycleViewSearchAdapter extends RecyclerView.Adapter<RecycleViewSe
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linearlayout);
             _namePerson = (TextView) itemView.findViewById(R.id.txt_home_person);
             _title = (TextView) itemView.findViewById(R.id.txt_home_title);
@@ -103,18 +128,26 @@ public class RecycleViewSearchAdapter extends RecyclerView.Adapter<RecycleViewSe
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), APostActivity.class);
-            intent.putExtra(POSITION, arr.get(getLayoutPosition()));
+            intent.putExtra(POSITION, getLayoutPosition());
             v.getContext().startActivity(intent);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            showBottomSheet();
+            return true;
+        }
+
+        public void showBottomSheet(){
+            Log.d(TAG, "showBottomSheet: ");
+            bottomSheetDialog = BottomSheetFragment.newInstance(getLayoutPosition());
+            bottomSheetDialog.show(((MainActivity)context).getSupportFragmentManager(), "Custom Bottom Sheet");
         }
     }
 
-    public void convert(){
-        for(int i = 0; i < homeItemsSearch.size(); i ++){
-            for(int j = 0; j < homeItems.size(); j ++){
-                if(homeItemsSearch.get(i).getId().equals(homeItems.get(j).getId())){
-                    arr.add(j);
-                }
-            }
-        }
+    private void removeAt(int position) {
+        posts.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, posts.size());
     }
 }

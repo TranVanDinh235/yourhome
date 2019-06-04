@@ -20,8 +20,8 @@ public class ResultSearchActivity extends AppCompatActivity {
 
 
         RecyclerView rvSearchItem = (RecyclerView) findViewById(R.id.rv_search);
-        RecycleViewSearchAdapter recycleViewSearchAdapter = new RecycleViewSearchAdapter();
-        rvSearchItem.setAdapter(recycleViewSearchAdapter);
+        SearchAdapter searchAdapter = new SearchAdapter();
+        rvSearchItem.setAdapter(searchAdapter);
         rvSearchItem.setLayoutManager(new LinearLayoutManager(this));
     }
 }

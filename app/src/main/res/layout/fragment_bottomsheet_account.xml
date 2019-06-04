@@ -42,7 +42,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             style="@style/headline6"
-            android:textColor="@color/bottomsheettext"
+            android:textColor="@color/replyblue1"
             android:layout_marginLeft="8dp"
             android:text="Đổi mật khẩu"/>
     </LinearLayout>
