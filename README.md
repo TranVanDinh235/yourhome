@@ -1,4 +1,3 @@
 # Homedy
-BÀI TẬP KHÔNG NHỎ.
-
-Giao diện: đang làm...=)))
+Ứng dụng tìm phòng trọ
+Công nghệ
